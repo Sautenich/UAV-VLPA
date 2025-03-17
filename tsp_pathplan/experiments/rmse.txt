@@ -1,0 +1,150 @@
+Results for Image 1:
+Nearest Neighbor Error (KNN): 43.845140 meters
+DTW-based Root Mean Squared Error (RMSE): 130.788991 meters
+Interpolation-based Root Mean Squared Error (RMSE): 138.045308 meters
+
+Results for Image 2:
+Nearest Neighbor Error (KNN): 36.134330 meters
+DTW-based Root Mean Squared Error (RMSE): 137.123779 meters
+Interpolation-based Root Mean Squared Error (RMSE): 186.210065 meters
+
+Results for Image 3:
+Nearest Neighbor Error (KNN): 46.344272 meters
+DTW-based Root Mean Squared Error (RMSE): 449.540355 meters
+Interpolation-based Root Mean Squared Error (RMSE): 566.179368 meters
+
+Results for Image 4:
+Nearest Neighbor Error (KNN): 207.723006 meters
+DTW-based Root Mean Squared Error (RMSE): 367.966165 meters
+Interpolation-based Root Mean Squared Error (RMSE): 525.725652 meters
+
+Results for Image 5:
+Nearest Neighbor Error (KNN): 34.221318 meters
+DTW-based Root Mean Squared Error (RMSE): 288.651818 meters
+Interpolation-based Root Mean Squared Error (RMSE): 491.021379 meters
+
+Results for Image 6:
+Nearest Neighbor Error (KNN): 43.672565 meters
+DTW-based Root Mean Squared Error (RMSE): 371.872122 meters
+Interpolation-based Root Mean Squared Error (RMSE): 541.321093 meters
+
+Results for Image 7:
+Nearest Neighbor Error (KNN): 50.810282 meters
+DTW-based Root Mean Squared Error (RMSE): 136.246051 meters
+Interpolation-based Root Mean Squared Error (RMSE): 265.199611 meters
+
+Results for Image 8:
+Nearest Neighbor Error (KNN): 39.019947 meters
+DTW-based Root Mean Squared Error (RMSE): 287.340206 meters
+Interpolation-based Root Mean Squared Error (RMSE): 408.993866 meters
+
+Results for Image 9:
+Nearest Neighbor Error (KNN): 100.132466 meters
+DTW-based Root Mean Squared Error (RMSE): 356.688728 meters
+Interpolation-based Root Mean Squared Error (RMSE): 611.036331 meters
+
+Results for Image 10:
+Nearest Neighbor Error (KNN): 56.774336 meters
+DTW-based Root Mean Squared Error (RMSE): 107.999050 meters
+Interpolation-based Root Mean Squared Error (RMSE): 209.690341 meters
+
+Results for Image 11:
+Nearest Neighbor Error (KNN): 56.823460 meters
+DTW-based Root Mean Squared Error (RMSE): 269.021077 meters
+Interpolation-based Root Mean Squared Error (RMSE): 688.180220 meters
+
+Results for Image 12:
+Nearest Neighbor Error (KNN): 56.698382 meters
+DTW-based Root Mean Squared Error (RMSE): 168.669864 meters
+Interpolation-based Root Mean Squared Error (RMSE): 321.740060 meters
+
+Results for Image 13:
+Nearest Neighbor Error (KNN): 37.518407 meters
+DTW-based Root Mean Squared Error (RMSE): 156.719770 meters
+Interpolation-based Root Mean Squared Error (RMSE): 233.418411 meters
+
+Results for Image 14:
+Nearest Neighbor Error (KNN): 126.846762 meters
+DTW-based Root Mean Squared Error (RMSE): 314.486189 meters
+Interpolation-based Root Mean Squared Error (RMSE): 530.662625 meters
+
+Results for Image 15:
+Nearest Neighbor Error (KNN): 36.676301 meters
+DTW-based Root Mean Squared Error (RMSE): 127.788168 meters
+Interpolation-based Root Mean Squared Error (RMSE): 208.349870 meters
+
+Results for Image 16:
+Nearest Neighbor Error (KNN): 66.592618 meters
+DTW-based Root Mean Squared Error (RMSE): 173.236673 meters
+Interpolation-based Root Mean Squared Error (RMSE): 255.015164 meters
+
+Results for Image 17:
+Nearest Neighbor Error (KNN): 60.915054 meters
+DTW-based Root Mean Squared Error (RMSE): 162.485257 meters
+Interpolation-based Root Mean Squared Error (RMSE): 223.228830 meters
+
+Results for Image 18:
+Nearest Neighbor Error (KNN): 337.886274 meters
+DTW-based Root Mean Squared Error (RMSE): 476.072067 meters
+Interpolation-based Root Mean Squared Error (RMSE): 723.487512 meters
+
+Results for Image 19:
+Nearest Neighbor Error (KNN): 58.397473 meters
+DTW-based Root Mean Squared Error (RMSE): 207.258305 meters
+Interpolation-based Root Mean Squared Error (RMSE): 285.706487 meters
+
+Results for Image 20:
+Nearest Neighbor Error (KNN): 53.729141 meters
+DTW-based Root Mean Squared Error (RMSE): 133.611039 meters
+Interpolation-based Root Mean Squared Error (RMSE): 195.730442 meters
+
+Results for Image 21:
+Nearest Neighbor Error (KNN): 55.459418 meters
+DTW-based Root Mean Squared Error (RMSE): 144.448514 meters
+Interpolation-based Root Mean Squared Error (RMSE): 164.524050 meters
+
+Results for Image 22:
+Nearest Neighbor Error (KNN): 64.856602 meters
+DTW-based Root Mean Squared Error (RMSE): 114.442927 meters
+Interpolation-based Root Mean Squared Error (RMSE): 90.240496 meters
+
+Results for Image 23:
+Nearest Neighbor Error (KNN): 70.459548 meters
+DTW-based Root Mean Squared Error (RMSE): 173.396033 meters
+Interpolation-based Root Mean Squared Error (RMSE): 292.029426 meters
+
+Results for Image 24:
+Nearest Neighbor Error (KNN): 69.363947 meters
+DTW-based Root Mean Squared Error (RMSE): 164.299628 meters
+Interpolation-based Root Mean Squared Error (RMSE): 114.935099 meters
+
+Results for Image 25:
+Nearest Neighbor Error (KNN): 55.141733 meters
+DTW-based Root Mean Squared Error (RMSE): 156.709985 meters
+Interpolation-based Root Mean Squared Error (RMSE): 291.680293 meters
+
+Results for Image 26:
+Nearest Neighbor Error (KNN): 52.022105 meters
+DTW-based Root Mean Squared Error (RMSE): 122.999666 meters
+Interpolation-based Root Mean Squared Error (RMSE): 299.929994 meters
+
+Results for Image 27:
+Nearest Neighbor Error (KNN): 50.519506 meters
+DTW-based Root Mean Squared Error (RMSE): 220.591275 meters
+Interpolation-based Root Mean Squared Error (RMSE): 319.883007 meters
+
+Results for Image 28:
+Nearest Neighbor Error (KNN): 47.726208 meters
+DTW-based Root Mean Squared Error (RMSE): 141.820589 meters
+Interpolation-based Root Mean Squared Error (RMSE): 227.554440 meters
+
+Results for Image 29:
+Nearest Neighbor Error (KNN): 31.741100 meters
+DTW-based Root Mean Squared Error (RMSE): 366.695502 meters
+Interpolation-based Root Mean Squared Error (RMSE): 547.440355 meters
+
+Results for Image 30:
+Nearest Neighbor Error (KNN): 27.701273 meters
+DTW-based Root Mean Squared Error (RMSE): 289.106861 meters
+Interpolation-based Root Mean Squared Error (RMSE): 490.049963 meters
+

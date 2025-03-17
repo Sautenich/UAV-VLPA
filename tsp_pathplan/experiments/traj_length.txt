@@ -1,0 +1,120 @@
+Image 1:
+Trajectory length from VLM: 1.54 km
+Trajectory length from MP: 1.35 km
+
+Image 2:
+Trajectory length from VLM: 1.80 km
+Trajectory length from MP: 1.56 km
+
+Image 3:
+Trajectory length from VLM: 2.34 km
+Trajectory length from MP: 2.52 km
+
+Image 4:
+Trajectory length from VLM: 0.85 km
+Trajectory length from MP: 2.00 km
+
+Image 5:
+Trajectory length from VLM: 2.35 km
+Trajectory length from MP: 2.47 km
+
+Image 6:
+Trajectory length from VLM: 1.67 km
+Trajectory length from MP: 1.67 km
+
+Image 7:
+Trajectory length from VLM: 1.47 km
+Trajectory length from MP: 1.84 km
+
+Image 8:
+Trajectory length from VLM: 2.12 km
+Trajectory length from MP: 2.27 km
+
+Image 9:
+Trajectory length from VLM: 2.15 km
+Trajectory length from MP: 2.78 km
+
+Image 10:
+Trajectory length from VLM: 1.76 km
+Trajectory length from MP: 2.19 km
+
+Image 11:
+Trajectory length from VLM: 2.94 km
+Trajectory length from MP: 2.79 km
+
+Image 12:
+Trajectory length from VLM: 1.32 km
+Trajectory length from MP: 2.00 km
+
+Image 13:
+Trajectory length from VLM: 1.72 km
+Trajectory length from MP: 1.77 km
+
+Image 14:
+Trajectory length from VLM: 0.81 km
+Trajectory length from MP: 3.32 km
+
+Image 15:
+Trajectory length from VLM: 1.86 km
+Trajectory length from MP: 2.05 km
+
+Image 16:
+Trajectory length from VLM: 1.58 km
+Trajectory length from MP: 2.31 km
+
+Image 17:
+Trajectory length from VLM: 1.83 km
+Trajectory length from MP: 1.98 km
+
+Image 18:
+Trajectory length from VLM: 1.05 km
+Trajectory length from MP: 3.33 km
+
+Image 19:
+Trajectory length from VLM: 1.17 km
+Trajectory length from MP: 1.20 km
+
+Image 20:
+Trajectory length from VLM: 2.07 km
+Trajectory length from MP: 2.24 km
+
+Image 21:
+Trajectory length from VLM: 2.17 km
+Trajectory length from MP: 2.76 km
+
+Image 22:
+Trajectory length from VLM: 0.88 km
+Trajectory length from MP: 0.61 km
+
+Image 23:
+Trajectory length from VLM: 1.39 km
+Trajectory length from MP: 1.42 km
+
+Image 24:
+Trajectory length from VLM: 0.86 km
+Trajectory length from MP: 0.79 km
+
+Image 25:
+Trajectory length from VLM: 1.23 km
+Trajectory length from MP: 1.37 km
+
+Image 26:
+Trajectory length from VLM: 2.44 km
+Trajectory length from MP: 2.55 km
+
+Image 27:
+Trajectory length from VLM: 1.79 km
+Trajectory length from MP: 1.78 km
+
+Image 28:
+Trajectory length from VLM: 1.76 km
+Trajectory length from MP: 2.28 km
+
+Image 29:
+Trajectory length from VLM: 2.39 km
+Trajectory length from MP: 3.33 km
+
+Image 30:
+Trajectory length from VLM: 1.95 km
+Trajectory length from MP: 2.44 km
+
