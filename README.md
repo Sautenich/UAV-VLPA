@@ -75,7 +75,7 @@ Some examples of the path generated can be seen below:
 
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/84fb1e8e-4926-4e73-bf7f-fbb83a3fdc33" alt="examples_path_generated2" width="900"/>
+  <img src="https://github.com/user-attachments/assets/84fb1e8e-4926-4e73-bf7f-fbb83a3fdc33" alt="examples_path_generated2" width="600"/>
 </div>
 
 ### Trajectory Bar Chart of UAV-VLA:
