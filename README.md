@@ -26,7 +26,14 @@ This repository includes:
 
 ### UAV-VLPA* Framework
 
-![image](https://github.com/user-attachments/assets/45639ac5-b05e-43e3-badc-bed35e011a51)
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/45639ac5-b05e-43e3-badc-bed35e011a51" alt="system_architecture" width="600"/>
+</div>
+
+
+
+
 
 ## Benchmark
 
