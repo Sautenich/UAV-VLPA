@@ -7,11 +7,10 @@
 1. [Abstract](#abstract)
 2. [Benchmark](#benchmark)
 3. [Installation](#installation)
-4. [Mission Generation](#mission-generation)
-5. [Path-Plans Creation](#path-plan-creation)
-6. [Experimental Results](#experimental-results)
-7. [Simulation Video](simulation-video)
-8. [Citation](citation)
+4. [Path-Plans Creation](#path-plan-creation)
+5. [Experimental Results](#experimental-results)
+6. [Simulation Video](simulation-video)
+7. [Citation](citation)
 
 
 ---
@@ -21,7 +20,7 @@ The UAV-VLPA* (Visual-Language-Planning-and-Action) system represents a cutting-
 
 
 This repository includes:
-- The implementation of the UAV-VLA framework.
+- The implementation of the UAV-VLPA* framework.
 
 
 ### UAV-VLPA* Framework
