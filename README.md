@@ -73,11 +73,10 @@ python3 run_vlm.py
 
 Some examples of the path generated can be seen below:
 
+
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/97beebc4-f579-46f8-9544-64f1b1002675" alt="examples_path_generated" width="900"/>
+  <img src="https://github.com/user-attachments/assets/84fb1e8e-4926-4e73-bf7f-fbb83a3fdc33" alt="examples_path_generated2" width="900"/>
 </div>
-
-
 
 ### Trajectory Bar Chart of UAV-VLA:
 
