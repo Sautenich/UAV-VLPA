@@ -1,4 +1,4 @@
-# UAV-VLPA*: A Vision-Language-Path-Action System for Optimal Route Generation on a Large Scales
+![image](https://github.com/user-attachments/assets/916cf662-82d1-4a10-9e61-0b230096ac45)# UAV-VLPA*: A Vision-Language-Path-Action System for Optimal Route Generation on a Large Scales
 
 
 ---
@@ -41,11 +41,7 @@ The images of the benchmark are stored in the folder ```benchmark-UAV-VLPA-nano-
 
 ## Installation
 
-It is possible to run docker by
 
-```
-docker run --gpus all -it <imagename>
-```
 
 To install requirements, run 
 
@@ -63,11 +59,13 @@ export api_key="your chatgpt ap_key"
 
 To generate commands for UAV add your API key for ChatGPT in the generate_plans.py, then run
 ```
-python3 generate_plans.py
+python3 AStar.py
 ```
-It will produce the commands and store the text files in the folder ```/created_missions``` and visualizations of the identified points on the benchmark images in the folder ```/identified_new_data```.
+or
+```
+python3 tsp.py
+```
 
-As a result of this script, you will also find the total computational time time of the UAV-VLA system which is approximately **5 minutes and 24 seconds**.
 
 ## Path-Plans Creation
 
@@ -78,9 +76,13 @@ python3 run_vlm.py
 
 Some examples of the path generated can be seen below:
 
+![image](https://github.com/user-attachments/assets/a68c9d15-ce2b-4215-801a-07d4183bb4c0)
+
+
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/386f7e78-83aa-4915-aa33-ec7fbdc6dd40" alt="examples_path_generated" width="600"/>
+  <img src="https://github.com/user-attachments/assets/97beebc4-f579-46f8-9544-64f1b1002675" alt="examples_path_generated" width="600"/>
 </div>
+
 
 ## Experimental Results
 
