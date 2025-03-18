@@ -65,14 +65,12 @@ or
 ```
 python3 tsp.py
 ```
-
-
-## Path-Plans Creation
-
-To see the results of VLM on the benchmark, run
 ```
 python3 run_vlm.py
 ```
+
+## Path-Plans Creation
+
 
 Some examples of the path generated can be seen below:
 
@@ -81,38 +79,6 @@ Some examples of the path generated can be seen below:
 </div>
 
 
-## Experimental Results
-
-To view the experimental results, you need to run the main.py script. This script automates the entire process of generating coordinates, calculating trajectory lengths, and producing visualizations.
-
-Navigate into the folder ```experiments/```, run:
-```
-python3 main.py
-```
-
-### What Happens When You run main.py:
-
-- Generate Home Positions
-
-- Generate VLM Coordinates
-
-- Generate MP Coordinates
-
-- Calculate Trajectory Lengths
-
-- Calculate RMSE (Root Mean Square Error)
-  
-- Plot Results
-
-- Generate Identified Images:
-The script generates images by overlaying the VLM and Mission Planner (human-generated) coordinates on the original images from the dataset.
-These identified images are saved in ```identified_images_VLM/``` (for VLM outputs) and ```identified_images_mp/``` (for Mission Planner outputs).
-
-After running the script, you will be able to examine:
-
-- Text Files: Containing the generated coordinates, home positions, and RMSE data.
-- Images: Showing the identified coordinates overlaid on the images.
-- Plots: Comparing trajectory lengths and RMSE values.
 
 ### Trajectory Bar Chart of UAV-VLA:
 
@@ -129,8 +95,7 @@ After running the script, you will be able to examine:
 
 ### Error Box Plot:
 
-
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/33918d23-b492-4e9a-a218-c4323c0965ff" alt="error_box_plot" width="500"/>
+  <img src="https://github.com/user-attachments/assets/002077a0-5582-4643-b6b4-84f07b1eec77" alt="error_box_plot" width="500"/>
 </div>
 
