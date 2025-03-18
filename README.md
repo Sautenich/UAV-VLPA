@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/916cf662-82d1-4a10-9e61-0b230096ac45)# UAV-VLPA*: A Vision-Language-Path-Action System for Optimal Route Generation on a Large Scales
+# UAV-VLPA*: A Vision-Language-Path-Action System for Optimal Route Generation on a Large Scales
 
 
 ---
@@ -76,11 +76,8 @@ python3 run_vlm.py
 
 Some examples of the path generated can be seen below:
 
-![image](https://github.com/user-attachments/assets/a68c9d15-ce2b-4215-801a-07d4183bb4c0)
-
-
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/97beebc4-f579-46f8-9544-64f1b1002675" alt="examples_path_generated" width="600"/>
+  <img src="https://github.com/user-attachments/assets/97beebc4-f579-46f8-9544-64f1b1002675" alt="examples_path_generated" width="900"/>
 </div>
 
 
