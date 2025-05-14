@@ -1,6 +1,10 @@
 # UAV-VLPA*: Vision-Language-Path-Action System for Optimal UAV Route Generation
 
-A sophisticated system that combines computer vision, natural language processing, and path planning to generate optimized flight paths for UAVs (Unmanned Aerial Vehicles).
+A system that combines computer vision, natural language processing, and path planning to generate optimized flight paths for UAVs (Unmanned Aerial Vehicles).
+
+
+https://github.com/user-attachments/assets/8c43850f-1ea8-4a1a-b2e2-95ac31a39501
+
 
 ## Features
 
