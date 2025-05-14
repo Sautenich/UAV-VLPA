@@ -1,252 +1,229 @@
-# import python_tsp.heuristics
-# print(dir(python_tsp.heuristics))
+"""
+TSP (Traveling Salesman Problem) Solver for UAV Path Planning
 
+This module implements a TSP solver using local search optimization to find
+the optimal route for a UAV visiting multiple waypoints. It integrates with
+vision and language models for waypoint identification and mission planning.
+"""
+
+from typing import Dict, List, Tuple, Any
+import os
+import json
+import numpy as np
+from PIL import Image
+import torch
+from python_tsp.heuristics import solve_tsp_local_search
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
-import json
 from transformers import AutoModelForCausalLM, AutoProcessor, GenerationConfig
-from PIL import Image
-import requests
-import torch
-import os
-import re
-import csv
+
 from parser_for_coordinates import parse_points
 from draw_circles import draw_dots_and_lines_on_image
-from recalculate_to_latlon import recalculate_coordinates, percentage_to_lat_lon, read_coordinates_from_csv
-from time import time
-from python_tsp.heuristics import solve_tsp_local_search
-import numpy as np
-
-#os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
-mission_directory = 'created_missions'
-if not os.path.exists(mission_directory):
-    os.makedirs(mission_directory)
-
-identified_new_data_directory = 'identified_new_data'
-
-# Check if the directory exists, if not, create it
-if not os.path.exists(identified_new_data_directory):
-    os.makedirs(identified_new_data_directory)
-
-
-list_of_the_resulted_coordinates_percentage = []
-list_of_the_resulted_coordinates_lat_lon = []
-list_of_optimized_coordinates = []
-
-NUMBER_OF_SAMPLES = 30 #len(os.listdir('/VLM_Drone/dataset_images'))
-print('NUMBER_OF_SAMPLES',NUMBER_OF_SAMPLES)
-
-# load the processor
-processor = AutoProcessor.from_pretrained(
-    'cyan2k/molmo-7B-O-bnb-4bit',
-    trust_remote_code=True,
-    torch_dtype='auto',
-    device_map='auto'
+from recalculate_to_latlon import (
+    recalculate_coordinates,
+    percentage_to_lat_lon,
+    read_coordinates_from_csv
 )
 
-# load the model
-model = AutoModelForCausalLM.from_pretrained(
-    'cyan2k/molmo-7B-O-bnb-4bit',
-    trust_remote_code=True,
-    torch_dtype='auto',
-    device_map='auto'
-)
+# Configuration constants
+NUMBER_OF_SAMPLES = 30
+MISSION_DIR = 'created_missions'
+IDENTIFIED_DATA_DIR = 'identified_new_data'
+BENCHMARK_DIR = 'benchmark-UAV-VLPA-nano-30'
 
-llm = ChatOpenAI(api_key='', model_name='gpt-4o', temperature=0)
+# Ensure required directories exist
+os.makedirs(MISSION_DIR, exist_ok=True)
+os.makedirs(IDENTIFIED_DATA_DIR, exist_ok=True)
 
-# 1. Step 1: Extract object types from the user's input command using the LLM
-
-step_1_template = """
-Extract all types of objects the drone needs to find from the following mission description:
-"{command}"
-
-Output the result in JSON format with a list of object types.
-Example output:
-{{
-    "object_types": ["village", "airfield", "stadium", "tennis court", "building", "ponds", "crossroad", "roundabout"]
-}}
-"""
-
-step_1_prompt = PromptTemplate(input_variables=["command"], template=step_1_template)
-
-step_1_chain = step_1_prompt | llm
-
-example_objects = '''
-{
-        "village_1": {"type": "village", "coordinates": [1.5, 3.5]},
-        "village_2": {"type": "village", "coordinates": [2.5, 6.0]},
-        "airfield": {"type": "airfield", "coordinates": [8.0, 6.5]}
-    }
-'''
-
-2. Step 2: Use Molmo model to find objects on the map
-def find_objects(json_input, example_objects):
-    """
-    Process the mission description to find object coordinates on the map and return optimized coordinates using TSP.
-    """
-    search_string = str()
-    find_objects_json_input = json_input.replace("`", "").replace("json","")    #[9::-3]
+class VisionLanguageProcessor:
+    """Handles vision and language processing for waypoint identification."""
     
-    find_objects_json_input_2 = json.loads(find_objects_json_input)
-
-    for i in range(0, len(find_objects_json_input_2["object_types"])):
-        sample = find_objects_json_input_2["object_types"][i]
-        search_string = search_string + sample
-
-    for i in range(1, NUMBER_OF_SAMPLES+1):
-        print(f"Processing image {i}")
-        string = f'benchmark-UAV-VLPA-nano-30/images/{i}.jpg' 
+    def __init__(self):
+        """Initialize vision and language models."""
+        self.processor = AutoProcessor.from_pretrained(
+            'cyan2k/molmo-7B-O-bnb-4bit',
+            trust_remote_code=True,
+            torch_dtype='auto',
+            device_map='auto'
+        )
         
-        # Process the image and text
-        inputs = processor.process(
-            images=[Image.open(f'benchmark-UAV-VLPA-nano-30/images/{i}.jpg')],
-            text=f'''
-            This is the satellite image of a city. Please, point all the next objects: {sample} 
-            '''
+        self.model = AutoModelForCausalLM.from_pretrained(
+            'cyan2k/molmo-7B-O-bnb-4bit',
+            trust_remote_code=True,
+            torch_dtype='auto',
+            device_map='auto'
+        )
+        
+        self.llm = ChatOpenAI(
+            api_key=os.getenv('OPENAI_API_KEY', ''),
+            model_name='gpt-4',
+            temperature=0
         )
 
-        inputs = {k: v.to(model.device).unsqueeze(0) for k, v in inputs.items()}
+    def extract_object_types(self, command: str) -> Dict[str, List[str]]:
+        """
+        Extract object types from mission command using LLM.
+        
+        Args:
+            command: Natural language mission description
+            
+        Returns:
+            Dictionary containing list of object types to identify
+        """
+        template = """
+        Extract all types of objects the drone needs to find from the following mission description:
+        "{command}"
 
-        # Generate output; maximum 200 new tokens; stop generation when <|endoftext|> is generated
-        output = model.generate_from_batch(
+        Output the result in JSON format with a list of object types.
+        Example output:
+        {
+            "object_types": ["village", "airfield", "stadium", "tennis court", "building", "ponds", "crossroad", "roundabout"]
+        }
+        """
+        
+        prompt = PromptTemplate(
+            input_variables=["command"],
+            template=template
+        )
+        
+        chain = prompt | self.llm
+        return json.loads(str(chain.invoke({"command": command})))
+
+    def process_image(self, image_path: str, search_query: str) -> List[Tuple[float, float]]:
+        """
+        Process an image to identify objects and their coordinates.
+        
+        Args:
+            image_path: Path to the image file
+            search_query: Description of objects to identify
+            
+        Returns:
+            List of (x, y) coordinates for identified objects
+        """
+        inputs = self.processor.process(
+            images=[Image.open(image_path)],
+            text=f'This is the satellite image of a city. Please, point all the next objects: {search_query}'
+        )
+        
+        inputs = {k: v.to(self.model.device).unsqueeze(0) for k, v in inputs.items()}
+        
+        output = self.model.generate_from_batch(
             inputs,
             GenerationConfig(max_new_tokens=2000, stop_strings="<|endoftext|>"),
-            tokenizer=processor.tokenizer
+            tokenizer=self.processor.tokenizer
         )
-
+        
         generated_tokens = output[0, inputs['input_ids'].size(1):]
-        generated_text = processor.tokenizer.decode(generated_tokens, skip_special_tokens=True)
+        generated_text = self.processor.tokenizer.decode(
+            generated_tokens,
+            skip_special_tokens=True
+        )
+        
+        return parse_points(generated_text)
 
-        parsed_points = parse_points(generated_text)
+class TSPSolver:
+    """Solves the Traveling Salesman Problem for UAV route optimization."""
+    
+    @staticmethod
+    def optimize_route(coordinates: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+        """
+        Optimize the route using TSP solver.
+        
+        Args:
+            coordinates: Dictionary of waypoints with their coordinates
+                Format: {
+                    'point_name': {
+                        'type': str,
+                        'coordinates': [float, float]
+                    }
+                }
+                
+        Returns:
+            Dictionary of waypoints in optimized order
+        """
+        # Extract coordinates and names
+        coords = []
+        names = []
+        for name, data in coordinates.items():
+            if 'coordinates' in data:
+                coords.append(data['coordinates'])
+                names.append(name)
+        
+        # Calculate distance matrix
+        num_coords = len(coords)
+        distance_matrix = np.zeros((num_coords, num_coords))
+        
+        for i in range(num_coords):
+            for j in range(i + 1, num_coords):
+                dist = np.linalg.norm(np.array(coords[i]) - np.array(coords[j]))
+                distance_matrix[i][j] = distance_matrix[j][i] = dist
+        
+        # Solve TSP
+        optimal_order = solve_tsp_local_search(distance_matrix)
+        if isinstance(optimal_order[0], list):
+            optimal_order = optimal_order[0]
+        
+        # Reorder coordinates
+        return {
+            names[i]: coordinates[names[i]]
+            for i in optimal_order
+        }
 
-        image_number = i
-
-        csv_file_path = 'benchmark-UAV-VLPA-nano-30/parsed_coordinates.csv'
-        coordinates_dict = read_coordinates_from_csv(csv_file_path)
-
-        result_coordinates = recalculate_coordinates(parsed_points, image_number, coordinates_dict)
-        draw_dots_and_lines_on_image(f'benchmark-UAV-VLPA-nano-30/images/{i}.jpg', parsed_points, output_path=f'identified_new_data/identified{i}.jpg')
-
-        print(result_coordinates)
-
-        list_of_the_resulted_coordinates_percentage.append(parsed_points)
-        list_of_the_resulted_coordinates_lat_lon.append(result_coordinates)
-
-        # Optimize coordinates using TSP and append to the list
-        optimized_coordinates = tsp_optimized_coordinates(result_coordinates)
-        list_of_optimized_coordinates.append(optimized_coordinates)
-
-    return json.dumps(result_coordinates), list_of_the_resulted_coordinates_percentage, list_of_the_resulted_coordinates_lat_lon, list_of_optimized_coordinates
-
-
-# 3. Step 3: Generate flight plan using LLM and identified objects
-step_3_template = """
-Given the mission description: "{command}" and the following identified objects: {objects}, generate a flight plan in pseudo-language.
-
-The available commands are on the website:
-
-
-Some hints:
-- arm throttle: arm the copter
-- takeoff Z: lift Z meters
-- disarm: disarm the copter
-- mode rtl: return to home
-- mode circle: circle and observe at the current position
-- mode guided(X Y Z): fly to the specified location
-
-Use the identified objects to create the mission.
-
-Provide me only with commands string-by-string.
-"""
-
-step_3_prompt = PromptTemplate(input_variables=["command", "objects"], template=step_3_template)
-step_3_chain = step_3_prompt | llm
-
-# TSP Function: Solve TSP using Euclidean distance between coordinates
-def tsp_optimized_coordinates(coordinates):
+def generate_drone_mission(command: str) -> Tuple[List[Dict], List[List], List[Dict]]:
     """
-    Use TSP to optimize the path for a drone using Euclidean distance between coordinates.
-    The coordinates should be in a dictionary format where each key represents a building 
-    and each value is another dictionary with 'type' and 'coordinates' as keys.
+    Generate a complete drone mission from a natural language command.
+    
+    Args:
+        command: Natural language description of the mission
+        
+    Returns:
+        Tuple containing:
+        - List of percentage-based coordinates
+        - List of latitude/longitude coordinates
+        - List of optimized coordinates
     """
-    coords = []
-    names = []
+    processor = VisionLanguageProcessor()
+    solver = TSPSolver()
     
-    # Extract coordinates and names from the input dictionary
-    for name, data in coordinates.items():
-        if 'coordinates' in data:
-            coords.append(data['coordinates'])
-            names.append(name)
+    # Extract object types from command
+    object_types = processor.extract_object_types(command)
+    search_query = ' '.join(object_types['object_types'])
     
-    # Calculate Euclidean distance matrix
-    num_coords = len(coords)
-    distance_matrix = np.zeros((num_coords, num_coords))
-
-    for i in range(num_coords):
-        for j in range(i + 1, num_coords):
-            dist = np.linalg.norm(np.array(coords[i]) - np.array(coords[j]))
-            distance_matrix[i][j] = distance_matrix[j][i] = dist
-
-    # Solve the TSP using local search
-    optimal_order = solve_tsp_local_search(distance_matrix)
-
-    # Ensure that the optimal_order is a list of indices, not a list of lists
-    if isinstance(optimal_order[0], list):  # This checks if it's a nested list
-        optimal_order = optimal_order[0]  # Flatten the list
-
-    # Reorder the coordinates according to the optimal TSP path
-    optimized_coordinates = {names[i]: coordinates[names[i]] for i in optimal_order}
-
-    return optimized_coordinates
-
-
-
-Full pipeline function
-def generate_drone_mission(command):
-    # Step 1: Extract object types
-    object_types_response = step_1_chain.invoke({"command": command})
-    object_types_json = object_types_response.content  # Use 'content' to get the actual response text
-
-    # Step 2: Find objects on the map
-    t1_find_objects = time()
-    objects_json, list_of_the_resulted_coordinates_percentage, list_of_the_resulted_coordinates_lat_lon, list_of_optimized_coordinates = find_objects(object_types_json, example_objects)
-    t2_find_objects = time()
-
-    del_t_find_objects = (t2_find_objects - t1_find_objects) / 60
-    print('Length of optimized coordinates:', len(list_of_optimized_coordinates))
-
-    #print('objects_json =', objects_json)
-
+    # Process each image in the dataset
+    percentage_coords = []
+    latlon_coords = []
+    optimized_coords = []
     
-    # Step 3: Generate the flight plan
-    t1_generate_drone_mission = time()
+    coordinates_dict = read_coordinates_from_csv(
+        f'{BENCHMARK_DIR}/parsed_coordinates.csv'
+    )
+    
+    for i in range(1, NUMBER_OF_SAMPLES + 1):
+        print(f"Processing image {i}")
+        image_path = f'{BENCHMARK_DIR}/images/{i}.jpg'
+        
+        # Process image and get coordinates
+        parsed_points = processor.process_image(image_path, search_query)
+        result_coords = recalculate_coordinates(parsed_points, i, coordinates_dict)
+        
+        # Visualize results
+        draw_dots_and_lines_on_image(
+            image_path,
+            parsed_points,
+            output_path=f'{IDENTIFIED_DATA_DIR}/identified{i}.jpg'
+        )
+        
+        # Store results
+        percentage_coords.append(parsed_points)
+        latlon_coords.append(result_coords)
+        
+        # Optimize route
+        optimized = solver.optimize_route(result_coords)
+        optimized_coords.append(optimized)
+    
+    return percentage_coords, latlon_coords, optimized_coords
 
-    for i in range(1,len(list_of_optimized_coordinates)+1): 
-        flight_plan_response = step_3_chain.invoke({"command": command, "objects": list_of_optimized_coordinates[i-1]})
-    #print('flight_plan_response = ', flight_plan_response)
-        with open(f"created_missions/mission{i}.txt","w") as file:   
-            file.write(str(flight_plan_response.content))
-
-        print(flight_plan_response.content)
-
-    t2_generate_drone_mission = time()
-    del_t_generate_drone_mission = (t2_generate_drone_mission - t1_generate_drone_mission)/60
-
-
-    return flight_plan_response.content, del_t_find_objects, del_t_generate_drone_mission  # Return the response text from AIMessage
-
-
-# Example usage:
-command = """Create a flight plan for the quadcopter to fly around each of the building at the height 100m return to home and land at the take-off point."""
-
-
-# Run the full pipeline
-flight_plan, vlm_model_time, mission_generation_time = generate_drone_mission(command)
-total_computational_time = vlm_model_time + mission_generation_time
-
-# Evaluation time
-print('-------------------------------------------------------------------')
-print('Time to get VLM results: ', vlm_model_time, 'mins')
-print('Time to get Mission Text files: ', mission_generation_time, 'mins')
-print('Total Computational Time: ', total_computational_time, 'mins')
+if __name__ == "__main__":
+    # Example usage
+    mission_command = "Find all villages, airfields, and stadiums in the area"
+    percentage_coords, latlon_coords, optimized_coords = generate_drone_mission(mission_command)

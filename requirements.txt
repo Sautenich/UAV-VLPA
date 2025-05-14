@@ -1,0 +1,19 @@
+# Core dependencies
+numpy>=1.21.0
+torch>=2.0.0
+Pillow>=9.0.0
+python-tsp>=0.3.0
+
+# Language models and processing
+langchain>=0.1.0
+langchain-openai>=0.0.2
+transformers>=4.30.0
+openai>=1.0.0
+
+# Image processing
+opencv-python>=4.8.0
+
+# Utilities
+tqdm>=4.65.0
+matplotlib>=3.7.0
+pandas>=2.0.0 

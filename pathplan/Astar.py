@@ -1,96 +1,132 @@
-# region A*
-# Thanks to https://github.com/VikashPR/18CSC305J-AI/blob/main/A_Star-BFS.py for code parts
+"""
+A* Pathfinding Algorithm Implementation
+
+This module implements the A* pathfinding algorithm for UAV path planning.
+The algorithm finds the optimal path between two points while considering
+obstacles and minimizing the total path cost.
+"""
+
+from typing import Dict, List, Set, Tuple, Optional
+import math
+
+
 class Graph:
-    def __init__(self, adjacency_list):
+    """A graph representation for A* pathfinding."""
+    
+    def __init__(self, adjacency_list: Dict[int, List[Tuple[int, float]]]):
+        """
+        Initialize the graph with an adjacency list.
+        
+        Args:
+            adjacency_list: Dictionary mapping vertices to their neighbors and edge weights.
+                          Format: {vertex: [(neighbor, weight), ...]}
+        """
         self.adjacency_list = adjacency_list
 
-    def get_neighbors(self, v):
-        return self.adjacency_list[v]
+    def get_neighbors(self, vertex: int) -> List[Tuple[int, float]]:
+        """
+        Get all neighbors of a vertex.
+        
+        Args:
+            vertex: The vertex to get neighbors for.
+            
+        Returns:
+            List of tuples containing (neighbor_vertex, edge_weight).
+        """
+        return self.adjacency_list[vertex]
 
-    # heuristic function with equal values for all nodes
-    def h(self, n, N, points):
+    def calculate_heuristic(self, current: int, goal: int, points: List[Tuple[float, float]]) -> float:
+        """
+        Calculate the heuristic value (estimated cost) from current node to goal.
+        Uses Euclidean distance as the heuristic.
+        
+        Args:
+            current: Current vertex index
+            goal: Goal vertex index
+            points: List of (x, y) coordinates for all vertices
+            
+        Returns:
+            Estimated cost from current to goal
+        """
+        return math.sqrt(
+            (points[goal][0] - points[current][0]) ** 2 +
+            (points[goal][1] - points[current][1]) ** 2
+        )
 
-        goalDist = ((points[N][0] - points[n][0]) ** 2 +
-                    (points[N][1] - points[n][1]) ** 2) ** .5
-
-        return goalDist
-
-    def a_star_algorithm(self, points, stop_node):
-        # open_list is a list of nodes which have been visited, but who's neighbors
-        # haven't all been inspected, starts off with the start node
-        # closed_list is a list of nodes which have been visited
-        # and who's neighbors have been inspected
-        open_list = {stop_node - 1}
-        closed_list = set([])
-
-        # g contains current distances from stop_node - 1 to all other nodes
-        # the default value (if it's not found in the map) is +infinity
-        g = {}
-
-        g[stop_node - 1] = 0
-
-        # parents contains an adjacency map of all nodes
-        parents = {}
-        parents[stop_node - 1] = stop_node - 1
-        dist = {}
-
-        while len(open_list) > 0:
-            n = None
-
-            # find a node with the lowest value of f() - evaluation function
-            for v in open_list:
-                if n == None or g[v] + self.h(v, stop_node, points) < g[n] + self.h(n, stop_node, points):
-                    n = v
-
-            if n == None:
-                print('Path does not exist!')
-                return []
-
-            # if the current node is the stop_node
-            # then we begin reconstructin the path from it to the stop_node - 1
-            if n == stop_node:
-                reconst_path = []
-
-                while parents[n] != n:
-                    reconst_path.append(n)
-                    n = parents[n]
-
-                reconst_path.append(stop_node - 1)
-
-                reconst_path.reverse()
-                # print('\nDistance to cover by A*:', round(dist[stop_node], 3))
-                # print('Vertexes to pass through:')
-                # print(*reconst_path, end='\n\n')
-                return reconst_path
-
-            # for all neighbors of the current node do
-            for (m, weight) in self.get_neighbors(n):
-                if m > stop_node:
+    def find_path(self, points: List[Tuple[float, float]], goal_node: int) -> List[int]:
+        """
+        Find the optimal path using A* algorithm.
+        
+        Args:
+            points: List of (x, y) coordinates for all vertices
+            goal_node: Index of the goal vertex
+            
+        Returns:
+            List of vertex indices representing the optimal path
+        """
+        start_node = goal_node - 1
+        open_set: Set[int] = {start_node}
+        closed_set: Set[int] = set()
+        
+        # g_scores contains current distances from start_node to all other nodes
+        g_scores: Dict[int, float] = {start_node: 0}
+        
+        # parents contains the path reconstruction information
+        parents: Dict[int, int] = {start_node: start_node}
+        
+        while open_set:
+            # Find node with lowest f_score (g_score + heuristic)
+            current = min(
+                open_set,
+                key=lambda v: g_scores.get(v, float('inf')) + 
+                    self.calculate_heuristic(v, goal_node, points)
+            )
+            
+            # Check if we've reached the goal
+            if current == goal_node:
+                return self._reconstruct_path(parents, current, start_node)
+            
+            open_set.remove(current)
+            closed_set.add(current)
+            
+            # Check all neighbors
+            for neighbor, weight in self.get_neighbors(current):
+                if neighbor > goal_node:
                     continue
-                # if the current node isn't in both open_list and closed_list
-                # add it to open_list and note n as it's parent
-                if m not in open_list and m not in closed_list:
-                    open_list.add(m)
-                    parents[m] = n
-                    g[m] = g[n] + weight
-                    dist[m] = g[m]
-                # otherwise, check if it's quicker to first visit n, then m
-                # and if it is, update parent data and g data
-                # and if the node was in the closed_list, move it to open_list
-                else:
-                    if g[m] > g[n] + weight:
-                        g[m] = g[n] + weight
-                        dist[m] = g[m]
-
-                        parents[m] = n
-                        if m in closed_list:
-                            closed_list.remove(m)
-                            open_list.add(m)
-
-            # remove n from the open_list, and add it to closed_list
-            # because all of his neighbors were inspected
-            open_list.remove(n)
-            closed_list.add(n)
-        print('Path does not exist!\n')
+                    
+                if neighbor in closed_set:
+                    continue
+                
+                # Calculate tentative g_score
+                tentative_g_score = g_scores[current] + weight
+                
+                if neighbor not in open_set:
+                    open_set.add(neighbor)
+                elif tentative_g_score >= g_scores.get(neighbor, float('inf')):
+                    continue
+                
+                # This path is the best until now. Record it!
+                parents[neighbor] = current
+                g_scores[neighbor] = tentative_g_score
+        
+        print('No path exists!')
         return []
-# endregion
+
+    def _reconstruct_path(self, parents: Dict[int, int], current: int, start: int) -> List[int]:
+        """
+        Reconstruct the path from the parents dictionary.
+        
+        Args:
+            parents: Dictionary mapping each node to its parent in the optimal path
+            current: Current (goal) node
+            start: Start node
+            
+        Returns:
+            List of nodes in the path from start to goal
+        """
+        path = []
+        while parents[current] != current:
+            path.append(current)
+            current = parents[current]
+        path.append(start)
+        return list(reversed(path))
