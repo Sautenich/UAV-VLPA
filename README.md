@@ -117,10 +117,14 @@ This project is licensed under the terms of the LICENSE file included in the rep
 If you use this work in your research, please cite:
 
 ```bibtex
-@article{uav-vlpa,
-  title={UAV-VLPA*: A Vision-Language-Path-Action System for Optimal Route Generation},
-  author={Your Name},
-  year={2024}
+@misc{sautenkov2025uavvlpavisionlanguagepathactionoptimalroute,
+      title={UAV-VLPA*: A Vision-Language-Path-Action System for Optimal Route Generation on a Large Scales}, 
+      author={Oleg Sautenkov and Aibek Akhmetkazy and Yasheerah Yaqoot and Muhammad Ahsan Mustafa and Grik Tadevosyan and Artem Lykov and Dzmitry Tsetserukou},
+      year={2025},
+      eprint={2503.02454},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2503.02454}, 
 }
 ```
 
